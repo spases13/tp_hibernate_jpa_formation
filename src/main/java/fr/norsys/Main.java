@@ -1,25 +1,24 @@
 package fr.norsys;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 
 public class Main {
 
-    @SuppressWarnings("deprecation")
     public static void main(String[] args) {
-        SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        // Create and save an example entity
-        Employe entity = new Employe();
-        entity.setName("Example");
-        session.save(entity);
-
-        session.getTransaction().commit();
-        session.close();
-        sessionFactory.close();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        //begin transaction
+        transaction.begin();
+        Employe employe = new Employe();
+        employe.setName("John Doe");
+        //use persist
+        entityManager.persist(employe);
+        transaction.commit();
+        entityManager.close();
+        entityManagerFactory.close();
     }
 }
